@@ -85,5 +85,4 @@ if __name__ == "__main__":
     from torchsummary import summary
 
     model = torchvision.models.resnet50()
-    model = ('inception_v4')
     summary(model, (3, 299, 299))
