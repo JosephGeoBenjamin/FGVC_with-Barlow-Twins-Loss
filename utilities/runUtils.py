@@ -48,9 +48,10 @@ def load_pretrained(model, weight_path, flexible = False, purge_func = None):
 
 
 
-def count_train_param(model):
+def count_train_param(model, console = False):
     train_params_count = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    print('The model has {} trainable parameters'.format(train_params_count))
+    if console: 
+        print('The model has {} trainable parameters'.format(train_params_count))
     return train_params_count
 
 

@@ -203,12 +203,9 @@ class FoodXDataset(torch.utils.data.Dataset):
 
 ## ========================= Transforms ========================================
 
-IMG_SIZE = 299
-
-
 class InferTransforms:
-    def __init__(self, infer=False):
-        self.img_size =  IMG_SIZE
+    def __init__(self, img_size=224):
+        self.img_size =  img_size
         self.transform = transforms.Compose([
             transforms.Resize((self.img_size, self.img_size)),
             transforms.ToTensor(),
@@ -223,18 +220,18 @@ class InferTransforms:
 
 
 class ClassifyTransforms:
-    def __init__(self, infer=False):
-        self.img_size =  IMG_SIZE
+    def __init__(self, img_size=224, infer=False):
+        self.img_size =  img_size
         train_transform = transforms.Compose([
             transforms.Resize((self.img_size, self.img_size)),
-            # transforms.RandomResizedCrop(self.img_size, scale=(0.6, 1.0),
-            #             interpolation=transforms.InterpolationMode.BICUBIC),
-            # transforms.RandomAffine(degrees=(-180, 180), translate=(0.2, 0.2),
-            #             interpolation=transforms.InterpolationMode.BICUBIC),
+            ### transforms.RandomResizedCrop(self.img_size, scale=(0.6, 1.0),
+            ###             interpolation=transforms.InterpolationMode.BICUBIC),
+            ### transforms.RandomAffine(degrees=(-180, 180), translate=(0.2, 0.2),
+            ###             interpolation=transforms.InterpolationMode.BICUBIC),
             transforms.RandAugment(),
             transforms.RandomHorizontalFlip(p=0.5),
             transforms.RandomVerticalFlip(p=0.5),
-            # transforms.AugMix(),
+            ### transforms.AugMix(),
             transforms.ToTensor(),
             transforms.Normalize( mean=(0.485, 0.456, 0.406),
                                   std=(0.229, 0.224, 0.225)),
@@ -281,13 +278,13 @@ class Solarization(object):
 
 
 class BarlowTransforms:
-    def __init__(self):
-        self.img_size =  IMG_SIZE
+    def __init__(self, img_size=224):
+        self.img_size =  img_size
         self.transform = transforms.Compose([
             transforms.Resize((self.img_size, self.img_size), 
                 interpolation=transforms.InterpolationMode.BICUBIC),
-            # transforms.RandomResizedCrop(self.img_size, 
-            #   interpolation=Image.BICUBIC),
+            ### transforms.RandomResizedCrop(self.img_size, 
+            ###   interpolation=Image.BICUBIC),
             transforms.RandomHorizontalFlip(p=0.5),
             transforms.RandomApply(
                 [transforms.ColorJitter(brightness=0.4, contrast=0.4,
@@ -303,8 +300,8 @@ class BarlowTransforms:
         self.transform_prime = transforms.Compose([
             transforms.Resize((self.img_size, self.img_size), 
                 interpolation=transforms.InterpolationMode.BICUBIC),
-            # transforms.RandomResizedCrop(self.img_size, 
-            #   interpolation=Image.BICUBIC),
+            ### transforms.RandomResizedCrop(self.img_size, 
+            ###   interpolation=Image.BICUBIC),
             transforms.RandomHorizontalFlip(p=0.5),
             transforms.RandomApply(
                 [transforms.ColorJitter(brightness=0.4, contrast=0.4,
@@ -328,6 +325,7 @@ class BarlowTransforms:
 
 ## ===================== Dataloaders Func ======================================
 
+IMG_SIZE = 224 # can be overridden in Config
 
 class SimplifiedLoader():
     def __init__(self, set_name) -> None:
@@ -338,10 +336,10 @@ class SimplifiedLoader():
         self.data_info = {}
 
 
-    def get_data_loader(self, type_, batch_size=64, workers=2, augument= "DEFAULT"):
+    def get_data_loader(self, type_, batch_size=64, workers=2, augument= "DEFAULT", image_size=IMG_SIZE):
 
         self.data_info["type"] = type_
-        transform = self._fetch_transforms(type_, augument)
+        transform = self._fetch_transforms(type_, augument, image_size)
         dataset = self._fetch_dataset(self.set_name, type_, transform)
 
 
@@ -357,16 +355,16 @@ class SimplifiedLoader():
 
         return loader, self.data_info.copy()
 
-    def _fetch_transforms(self, type_, augument):
+    def _fetch_transforms(self, type_, augument, image_size):
 
         if (type_ in ["valid", "test", "infer"]) or (augument in ["INFER", None]):
-            data_transform = InferTransforms()
+            data_transform = InferTransforms(image_size)
         elif augument == "DEFAULT":
-            data_transform = ClassifyTransforms()
+            data_transform = ClassifyTransforms(image_size)
         elif augument == "AUGMIX":
             data_transform = None # will be set by _augmix_loader_impl
         elif augument == "BARLOW":
-            data_transform = BarlowTransforms()
+            data_transform = BarlowTransforms(image_size)
         else:
             raise ValueError("Unknown augument specified")
 
@@ -423,7 +421,7 @@ class SimplifiedLoader():
 
 
     def _augmix_loader_impl(self, dataset, batch_size=64, workers=2,
-                            splits = 3, type_ = "train"):
+                            splits = 3, img_size = 224, type_ = "train"):
         ## TODO: figure out and Fix issue with concat dataset
         """ timm library based usage
         Reference:[1]https://github.com/rwightman/pytorch-image-models/blob/main/timm/data/loader.py#L189
@@ -433,7 +431,7 @@ class SimplifiedLoader():
 
         dataset = timm.data.AugMixDataset(dataset, num_splits=splits)
         loader = timm.data.create_loader(dataset,
-                    input_size=(3, 224, 224),
+                    input_size=(3, img_size, img_size),
                     batch_size=batch_size,
                     is_training=True,
                     use_prefetcher=True,
@@ -449,7 +447,7 @@ class SimplifiedLoader():
                     std=(0.229, 0.224, 0.225),  ## Imagenet
                     num_workers=workers,
                     collate_fn=None, #FastCollateMixup
-                    pin_memory=True,           )
+                    pin_memory=True, )
 
 
         return loader

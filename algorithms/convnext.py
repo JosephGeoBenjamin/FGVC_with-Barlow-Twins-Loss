@@ -95,6 +95,7 @@ class ConvNeXt(nn.Module):
             cur += depths[i]
 
         self.norm = nn.LayerNorm(dims[-1], eps=1e-6) # final norm layer
+        print(dims[-1], num_classes)
         self.head = nn.Linear(dims[-1], num_classes)
 
         self.apply(self._init_weights)
@@ -241,7 +242,7 @@ class ClassifierNet(nn.Module):
 
         ## pretrain setting
         pretrain = False; imgnet22k = False
-        head_default = None
+        head_default = 1000
         if self.args.featx_pretrain in ["DEFAULT", "IMGNET-1K"]:
             pretrain = True
             head_default = 1000
@@ -275,12 +276,6 @@ class ClassifierNet(nn.Module):
             raise ValueError(f"Unknown Model Implementation called in {os.path.basename(__file__)}")
 
         backbone.head = nn.Identity() #remove fc of default arc
-
-        # pretrain from external file
-        if os.path.exists(self.args.featx_pretrain):
-            backbone = self._load_weights_from_file(backbone,
-                                self.args.featx_pretrain )
-            print("Loaded:", self.args.featx_pretrain )
 
         return backbone, outfeat_size
 
