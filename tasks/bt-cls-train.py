@@ -38,7 +38,7 @@ print("Device Used:", device)
 cfg = rutl.ObjDict(
 dataset = "air", # "air+car", "food", "car"
 balance_class = False, #to be implemented
-
+image_size = 299,
 epochs= 1000,
 batch_size= 64,
 workers= 4,
@@ -86,11 +86,11 @@ def getDatasetSelection():
     loaderObj = SimplifiedLoader(cfg.dataset)
     trainloader, train_info = loaderObj.get_data_loader(type_= "train",
                     batch_size=cfg.batch_size, workers=cfg.workers,
-                    augument= cfg.stratergy)
+                    augument= cfg.stratergy, image_size= cfg.image_size)
 
     validloader, valid_info = loaderObj.get_data_loader(type_= "valid",
                     batch_size=cfg.batch_size, workers=cfg.workers,
-                    augument= "INFER")
+                    augument= "INFER", image_size= cfg.image_size)
 
     lutl.LOG2DICTXT({"Train-":train_info}, cfg.gLogPath +'/misc.txt')
     lutl.LOG2DICTXT({"Valid-": valid_info}, cfg.gLogPath +'/misc.txt')
