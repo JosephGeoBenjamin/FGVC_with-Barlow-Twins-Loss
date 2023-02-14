@@ -18,10 +18,16 @@ The Method gives noticible accuracy improvement on
 
 ### Repo:
 
-**Train**
+**Train Models**
 
+```
+python tasks/bt-cls-train.py --load_json config/bt-cls-train_cfg.json
+```
 
-
+**Get Validation Results**
+```
+python tasks/validate-results.py --load_json JSON --batch-size 256  --output-path OUTDIR
+```
 
 
 Note: Completed as part of CV703 Course work of MBZUAI.  
