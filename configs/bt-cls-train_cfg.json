@@ -1,0 +1,23 @@
+{
+    "dataset": "air+car",
+    "balance_class": false,
+    "epochs": 500,
+    "batch_size": 8,
+    "workers": 16,
+    "learning_rate": 1e-04,
+    "weight_decay": 1e-06,
+    "stratergy": "BARLOW",
+
+    "feature_extract": "convnext-base",
+    "featx_pretrain": "IMGNET-22K",
+    "featx_dropout": 0.1,
+    "barlow_projector": [
+        4096,4096,4096
+    ],
+    "classifier": [
+        512
+    ],
+    "clsfy_dropout": 0.5,
+    "checkpoint_dir": "hypotheses/-dummy/BT-search/BTcnxtB-0X-air+car-img",
+    "restart_training": false
+}

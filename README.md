@@ -1,4 +1,4 @@
-# Joint Fine Grained Classification along with Features Redundancy Reduction and Invariance Maximization 
+# Fine Grained Visual Classification with Features Redundancy Reduction and Invariance Maximization Loss
 
 ### Work:
 
@@ -24,4 +24,5 @@ The Method gives noticible accuracy improvement on
 
 
 
-Note: Completed as part of CV703 Course work of MBZUAI.
+Note: Completed as part of CV703 Course work of MBZUAI.  
+Most codes are written from scratch up with reference and *taken codes* are cited then asn there.
