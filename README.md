@@ -4,7 +4,7 @@
 
 ## Work:
 
-[Technical Report](https://github.com/JosephGeoBenjamin/FGVC_with-Barlow-Twins-Loss/releases/download/doc-1/FGVC-TechReport-CV703-MBZUAI.pdf)
+[Technical Report](https://docs.google.com/viewer?url=https://github.com/JosephGeoBenjamin/FGVC_with-Barlow-Twins-Loss/releases/download/doc-1/FGVC-TechReport-CV703-MBZUAI.pdf)
 
 Using Barlow Twin's Cross-Correlation Loss function between representaions for
 augumentations of same image. Two images are passed to shared extractor model,
