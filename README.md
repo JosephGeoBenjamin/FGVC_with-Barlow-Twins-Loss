@@ -34,5 +34,6 @@ python tasks/validate-results.py --load_json JSON --batch-size 256  --output-pat
 ```
 
 
-Note: Completed as part of CV703 Course work of MBZUAI.
-Most codes are written from scratch up with reference and *taken codes* are cited then asn there.
+## Acknowledgement
+Completed as part of CV703 Course work of MBZUAI.
+Most codes are written from scratch up with reference and *taken codes* are cited then and there.
